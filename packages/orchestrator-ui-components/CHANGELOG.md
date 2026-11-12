@@ -1,5 +1,38 @@
 # @orchestrator-ui/orchestrator-ui-components
 
+## 10.5.0
+
+### Minor Changes
+
+- b317355: The workflows and tasks list pages now use the GraphQL `processes` search instead of the old search, in the same structured search table as the subscriptions list.
+  
+  - Both pages get the search bar, filter builder, retriever selection and "show more" pagination, with the search in the URL. Only visible columns are requested, and a score column shows during a query or filter.
+  - Tabs filter on `statuses`: `defaultWorkflowsListTabs` and `defaultTasksListTabs` are `WfoProcessListTab`s (`ProcessActiveStatuses` or `ProcessDoneStatuses`) instead of using `alwaysOnFilters`.
+  - `WfoProcessesList` takes `isTask` and `statuses` instead of `alwaysOnFilters`, `dataDisplayParams` and `setDataDisplayParam`. `ProcessListExportItem` and `processListObjectMappers` are removed.
+  - Search list columns are keyed by the GraphQL path of their value. Subscriptions `productName`, `tag`, `customerFullname`, `customerShortcode` and processes `productName`, `tag`, `customer`, `customerAbbreviation` are now `product.name`, `product.tag`, `customer.fullname`, `customer.shortcode`. Hidden columns reappear once, and the csv exports are named by the translated column labels.
+  - `getSubscriptionListSearch` and the new `getProcessListSearch` take GraphQL fields in the payload `columns` (`'product.name'`, not `'subscription.product.name'`).
+  - `WfoStructuredSearchTable` and `WfoFilterBuilder` require an `entityKind`, which sets the search paths the filter builder and column filters resolve. A data column can declare a `searchPath` for sorting, filtering and export.
+  - New hooks `useStructuredSearchState` and `useSearchExport` share the search state and csv export of the lists.
+  - The subscriptions list no longer duplicates rows when a loaded page is refetched after an invalidation, such as a note edit.
+  - The row details modal of the process and subscription lists loads the full row when it opens, so columns that are hidden in the table are filled. `WfoStructuredSearchTable` takes an optional `renderRowDetails` for custom modal content, which gives more freedom over what the row details show than the table data allows, and the new `WfoRowDetails` renders the row as a key value table with a loading state.
+- 44ed197: The subscriptions list page now uses the GraphQL `subscriptions` search instead of the REST search endpoint.
+  
+  - Only the visible columns are requested.
+  - The optimistic note edit patches the new cache shape.
+  - camelCase highlight_indices and matching_fields.
+- 14461c1: Update the header badges; badge for (failed) workflows added, layout updated (no more background
+  color, lighter text).
+  Fix gradient at bottom of table settings modal on dark mode
+- 0ef2cf0: Add the Websocket badge to the header of the Subscriptions list page
+- c133981: Add the WFO agent's chat popup (`@orchestrator-ui/orchestrator-agent-chat`) to every page of a deployment that sets `orchestratorAgentUrl`; the person's access token goes along.
+
+### Patch Changes
+
+- e28ac7d: Reset the bulk edit selection whenever the data changes (e.g. after a filter's been applied)
+- 0047052: 281 Show only Fuzzy retrieval type when embedding setting is false
+- f46e514: Rename the "Scheduled tasks" metadata tab and menu item to "Schedules"
+- a91f576: 245 Add lock icon to unpriviliged tasks
+
 ## 10.4.0
 
 ### Minor Changes
